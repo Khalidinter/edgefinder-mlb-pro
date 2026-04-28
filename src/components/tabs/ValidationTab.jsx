@@ -74,25 +74,26 @@ export default function ValidationTab({ validation, loading, onRefresh }) {
               ts={validation.ts}
               onRefresh={onRefresh} />
 
-      {/* Status grid — quick visual */}
+      {/* Status grid — compact at-a-glance dots */}
       <div>
-        <SectionHeading count={totalChecks}>Live Status</SectionHeading>
+        <SectionHeading count={totalChecks}
+                        action={
+                          <div style={{ display: "flex", gap: 14, fontSize: 11, color: C.muted }}>
+                            <Legend color={C.good} label={`${passing} pass`} />
+                            <Legend color={C.warn} label={`${warnings} warn`} />
+                            <Legend color={C.bad}  label={`${failures} fail`} />
+                          </div>
+                        }>
+          Live Status
+        </SectionHeading>
         <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(64px, 1fr))",
-          gap: 6, padding: 14,
+          display: "flex", flexWrap: "wrap", gap: 5,
+          padding: 14,
           background: C.card, border: `1px solid ${C.border}`, borderRadius: 10,
         }}>
           {(validation.checks || []).map((c, i) => (
             <CheckSquare key={i} check={c} />
           ))}
-        </div>
-        <div style={{
-          display: "flex", gap: 16, padding: "10px 0", fontSize: 11, color: C.muted,
-          flexWrap: "wrap",
-        }}>
-          <Legend color={C.good} label={`${passing} passing`} />
-          <Legend color={C.warn} label={`${warnings} warnings`} />
-          <Legend color={C.bad}  label={`${failures} critical failures`} />
         </div>
       </div>
 
@@ -147,14 +148,15 @@ function CheckSquare({ check }) {
   return (
     <div title={`${CHECK_LABELS[check.check] || check.check} · ${check.stat}\n${check.detail}`}
          style={{
-           aspectRatio: "1",
-           background: `${color}20`,
-           border: `1px solid ${color}50`,
+           width: 32, height: 32,
+           background: `${color}1a`,
+           border: `1px solid ${color}55`,
            borderRadius: 4,
-           display: "flex", alignItems: "center", justifyContent: "center",
+           display: "inline-flex", alignItems: "center", justifyContent: "center",
            color,
-           fontSize: 14, fontWeight: 700,
+           fontSize: 13, fontWeight: 700,
            cursor: "default",
+           flexShrink: 0,
          }}>
       {check.status === "pass" ? "✓" : check.status === "warn" ? "⚠" : "✗"}
     </div>
