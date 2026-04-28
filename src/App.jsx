@@ -10,7 +10,8 @@ import SettingsDrawer from './components/SettingsDrawer.jsx';
 import LiveBoardTab from './components/tabs/LiveBoardTab.jsx';
 import TrajectoryTab from './components/tabs/TrajectoryTab.jsx';
 import PerformanceTab from './components/tabs/PerformanceTab.jsx';
-import Placeholder from './components/tabs/Placeholder.jsx';
+import ValidationTab from './components/tabs/ValidationTab.jsx';
+import ResolvedTab from './components/tabs/ResolvedTab.jsx';
 import { C, POLL, DEFAULT_WORKER_URL } from './utils/constants.js';
 import { usePolling } from './hooks/usePolling.js';
 import { useEdgesPoll } from './hooks/useEdgesPoll.js';
@@ -53,6 +54,24 @@ export default function App() {
   useEffect(() => {
     const id = setInterval(() => setTodayDate(todayET()), 5 * 60_000);
     return () => clearInterval(id);
+  }, []);
+
+  // Keyboard shortcuts: 1-5 → tab, ? → settings, esc → close drawer
+  useEffect(() => {
+    function onKey(e) {
+      // Ignore when typing in inputs
+      const tag = e.target.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tabKeys = ["1","2","3","4","5"];
+      const tabs   = ["live","trajectory","performance","validation","resolved"];
+      const idx = tabKeys.indexOf(e.key);
+      if (idx >= 0) { setActiveTab(tabs[idx]); e.preventDefault(); return; }
+      if (e.key === "?" || e.key === "/") { setSettingsOpen(true); e.preventDefault(); return; }
+      if (e.key === "Escape") setSettingsOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   const isAuthed = !!(settings.workerUrl && settings.token);
@@ -237,8 +256,20 @@ export default function App() {
             edgesLoading={edgesData.loading}
           />
         )}
-        {activeTab === "validation"  && <Placeholder title="Validation"       milestone="Milestone 5" />}
-        {activeTab === "resolved"    && <Placeholder title="Resolved Bets"    milestone="Milestone 5" />}
+        {activeTab === "validation" && (
+          <ValidationTab
+            validation={validationPoll.data}
+            loading={validationPoll.loading}
+            onRefresh={validationPoll.refresh}
+          />
+        )}
+        {activeTab === "resolved" && (
+          <ResolvedTab
+            edges={edgesData.edges}
+            edgesLoading={edgesData.loading}
+            trackedBets={trackedPoll.data}
+          />
+        )}
       </main>
 
       <SettingsDrawer open={settingsOpen} onClose={() => setSettingsOpen(false)}
@@ -248,7 +279,7 @@ export default function App() {
         textAlign: "center", padding: "30px 16px", fontSize: 11, color: C.muted,
         borderTop: `1px solid ${C.borderSoft}`, marginTop: 40, letterSpacing: "1px",
       }}>
-        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.4
+        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.5
       </footer>
     </div>
   );

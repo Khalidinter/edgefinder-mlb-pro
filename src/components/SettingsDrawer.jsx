@@ -49,9 +49,21 @@ export default function SettingsDrawer({ open, onClose, settings, onSave }) {
           </Field>
         </Section>
 
+        <Section title="Keyboard shortcuts">
+          <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.9 }}>
+            <ShortcutRow keys={["1"]} label="Live Board" />
+            <ShortcutRow keys={["2"]} label="Trajectory" />
+            <ShortcutRow keys={["3"]} label="Performance" />
+            <ShortcutRow keys={["4"]} label="Validation" />
+            <ShortcutRow keys={["5"]} label="Resolved" />
+            <ShortcutRow keys={["?", "/"]} label="Open settings" />
+            <ShortcutRow keys={["Esc"]} label="Close drawer" />
+          </div>
+        </Section>
+
         <Section title="About">
           <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.6 }}>
-            <strong style={{ color: C.text }}>EdgeFinder MLB</strong> · v0.1<br />
+            <strong style={{ color: C.text }}>EdgeFinder MLB</strong> · v0.5<br />
             by <span style={{ color: BRAND.teal }}>CogniVault Labs</span><br /><br />
             All data flows directly from your <code style={codeStyle}>edgefinder-mlb</code> Cloudflare Worker.
             No third-party tracking, no analytics.
@@ -60,6 +72,24 @@ export default function SettingsDrawer({ open, onClose, settings, onSave }) {
 
         <button onClick={save} style={primaryBtn}>Save</button>
       </div>
+    </div>
+  );
+}
+
+function ShortcutRow({ keys, label }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <span>{label}</span>
+      <span style={{ display: "inline-flex", gap: 3 }}>
+        {keys.map((k, i) => (
+          <kbd key={i} style={{
+            padding: "1px 7px", borderRadius: 4,
+            background: C.bg, border: `1px solid ${C.border}`,
+            color: C.text, fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 11, fontWeight: 600,
+          }}>{k}</kbd>
+        ))}
+      </span>
     </div>
   );
 }
