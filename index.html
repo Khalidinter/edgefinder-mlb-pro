@@ -27,7 +27,23 @@
       ::-webkit-scrollbar-thumb:hover { background: #2e3d52; }
       input, button, textarea, select { font-family: inherit; font-size: inherit; }
       button { cursor: pointer; }
+      a { color: inherit; }
       .mono { font-family: 'JetBrains Mono', monospace; }
+
+      /* ─── Mobile polish ─── */
+      /* All buttons get a touch-friendly min height on small screens */
+      @media (max-width: 640px) {
+        button { min-height: 36px; }
+        body { font-size: 13px; }
+        /* Tighter top bar padding on phone */
+        .ef-topbar { padding: 12px 14px !important; gap: 8px !important; }
+        /* Main content uses less side padding */
+        main { padding: 12px !important; }
+      }
+      /* Tap target on iOS */
+      @supports (-webkit-touch-callout: none) {
+        button, a { -webkit-tap-highlight-color: transparent; }
+      }
     </style>
   </head>
   <body>

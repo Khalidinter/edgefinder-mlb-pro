@@ -13,13 +13,12 @@ export default function GameBox({ schedule, loading, selectedGame, onSelectGame 
 
   return (
     <aside style={{
-      width: 280,
-      flexShrink: 0,
       position: "sticky",
       top: 16,
-      alignSelf: "flex-start",
       maxHeight: "calc(100vh - 130px)",
       overflowY: "auto",
+      // padding-right so scrollbar doesn't crowd the cards
+      paddingRight: 2,
     }}>
       <SectionHeading
         count={total}

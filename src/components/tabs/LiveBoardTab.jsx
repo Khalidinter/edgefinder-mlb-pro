@@ -75,11 +75,17 @@ export default function LiveBoardTab({
 
   return (
     <div style={{
-      display: "flex", gap: 24,
-      flexWrap: "wrap-reverse",   // sidebar drops below on small screens
-    }}>
+      display: "grid",
+      // Sidebar 280px on the right when there's room (>= 880px wide),
+      // single column otherwise (sidebar drops below).
+      gridTemplateColumns: "minmax(0, 1fr) 280px",
+      gap: 24,
+      alignItems: "start",      // KEY for sticky to work in grid
+    }}
+    className="lb-grid"
+    >
       {/* Main column */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ minWidth: 0 }}>
         {/* Hero stat strip */}
         <div style={{
           display: "flex", gap: 12, marginBottom: 18, flexWrap: "wrap",
@@ -159,6 +165,12 @@ export default function LiveBoardTab({
         selectedGame={selectedGame}
         onSelectGame={setSelectedGame}
       />
+
+      <style>{`
+        @media (max-width: 880px) {
+          .lb-grid { grid-template-columns: minmax(0, 1fr) !important; }
+        }
+      `}</style>
     </div>
   );
 }

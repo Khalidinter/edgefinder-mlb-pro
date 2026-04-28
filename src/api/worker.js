@@ -114,6 +114,14 @@ export async function fetchSchedule(workerUrl, token, date) {
   return getJSON(workerUrl, token, `/schedule${params}`);
 }
 
+// ── Aggregate (server-computed breakdowns) ──
+export async function fetchAggregate(workerUrl, token, opts = {}) {
+  const p = new URLSearchParams();
+  if (opts.from) p.set("from", opts.from);
+  if (opts.to)   p.set("to", opts.to);
+  return getJSON(workerUrl, token, `/aggregate?${p}`);
+}
+
 // ── Trajectory ──
 export async function fetchTrajectory(workerUrl, token, q) {
   const params = new URLSearchParams(q);

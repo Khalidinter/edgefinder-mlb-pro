@@ -63,7 +63,7 @@ export default function SettingsDrawer({ open, onClose, settings, onSave }) {
 
         <Section title="About">
           <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.6 }}>
-            <strong style={{ color: C.text }}>EdgeFinder MLB</strong> · v0.5<br />
+            <strong style={{ color: C.text }}>EdgeFinder MLB</strong> · v0.6<br />
             by <span style={{ color: BRAND.teal }}>CogniVault Labs</span><br /><br />
             All data flows directly from your <code style={codeStyle}>edgefinder-mlb</code> Cloudflare Worker.
             No third-party tracking, no analytics.

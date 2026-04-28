@@ -52,14 +52,18 @@ export default function TopBar({ status, validation, onOpenSettings, onRefresh, 
   const todayISO = today.date || new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 
   return (
-    <div style={{
+    <div className="ef-topbar" style={{
       display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "18px 24px",
+      padding: "16px 20px",
       background: C.card,
       borderBottom: `1px solid ${C.border}`,
-      gap: 14, flexWrap: "wrap",
+      gap: 12, flexWrap: "wrap",
     }}>
-      <BrandBlock size={44} />
+      <a href="https://cognivaultlabs.com" target="_blank" rel="noopener noreferrer"
+         style={{ textDecoration: "none", display: "inline-block" }}
+         title="Visit CogniVault Labs">
+        <BrandBlock size={44} />
+      </a>
 
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
         <Pill color={profitColor}>{fmtUnits(profit)} all-time</Pill>

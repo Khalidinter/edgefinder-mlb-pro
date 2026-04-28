@@ -279,7 +279,7 @@ export default function App() {
         textAlign: "center", padding: "30px 16px", fontSize: 11, color: C.muted,
         borderTop: `1px solid ${C.borderSoft}`, marginTop: 40, letterSpacing: "1px",
       }}>
-        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.5
+        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.6
       </footer>
     </div>
   );
