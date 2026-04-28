@@ -2,7 +2,7 @@
 // AuthGate — first-launch screen for token entry
 // ═══════════════════════════════════════════════════
 import { useState } from "react";
-import { CogniVaultLogo } from "./CogniVaultLogo.jsx";
+import { SplashBrand } from "./CogniVaultLogo.jsx";
 import { BRAND, C, DEFAULT_WORKER_URL } from '../utils/constants.js';
 
 export default function AuthGate({ onSubmit, errorMsg }) {
@@ -25,16 +25,10 @@ export default function AuthGate({ onSubmit, errorMsg }) {
       alignItems: "center", justifyContent: "center", padding: 24,
       background: `radial-gradient(ellipse at center, #0F1620 0%, ${C.bg} 70%)`,
     }}>
-      <div style={{ marginBottom: 28 }}>
-        <CogniVaultLogo size={72} />
+      <div style={{ marginBottom: 36 }}>
+        <SplashBrand size={80} />
       </div>
-      <div style={{
-        fontSize: 18, fontWeight: 800, letterSpacing: "4px",
-        color: BRAND.teal, textTransform: "uppercase", marginBottom: 6,
-      }}>
-        EdgeFinder <span style={{ color: C.red }}>MLB</span>
-      </div>
-      <div style={{ fontSize: 11, color: C.muted, letterSpacing: 2, marginBottom: 30 }}>
+      <div style={{ fontSize: 11, color: C.muted, letterSpacing: 2.5, marginBottom: 28 }}>
         CONNECT WORKER
       </div>
 

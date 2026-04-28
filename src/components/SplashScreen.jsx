@@ -2,7 +2,7 @@
 // Splash Screen — CogniVault Labs × EdgeFinder MLB
 // ═══════════════════════════════════════════════════
 import { useState, useEffect } from "react";
-import { CogniVaultLogo } from "./CogniVaultLogo.jsx";
+import { SplashBrand } from "./CogniVaultLogo.jsx";
 import { BRAND, C } from '../utils/constants.js';
 
 export default function SplashScreen({ onComplete }) {
@@ -34,57 +34,19 @@ export default function SplashScreen({ onComplete }) {
 
       <div style={{
         opacity: phase === "enter" ? 0 : 1,
-        transform: phase === "enter" ? "scale(0.92) translateY(8px)" : "scale(1) translateY(0)",
+        transform: phase === "enter" ? "scale(0.94) translateY(8px)" : "scale(1) translateY(0)",
         transition: "all 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
       }}>
-        <CogniVaultLogo size={88} />
-      </div>
-
-      {/* Baseball-stitch divider */}
-      <div style={{
-        marginTop: 22, marginBottom: 14,
-        width: phase === "enter" ? 0 : 80, height: 1,
-        background: `linear-gradient(90deg, transparent, ${BRAND.teal}66, transparent)`,
-        transition: "width 0.5s ease 0.3s",
-        position: "relative",
-      }}>
-        {phase !== "enter" && [16, 40, 64].map(x => (
-          <span key={x} style={{
-            position: "absolute", left: `${x}px`, top: -2,
-            width: 4, height: 4, borderRadius: "50%",
-            background: C.red, opacity: 0.7,
-          }} />
-        ))}
+        <SplashBrand size={92} />
       </div>
 
       <div style={{
-        opacity: phase === "enter" ? 0 : 1,
-        transform: phase === "enter" ? "translateY(8px)" : "translateY(0)",
-        transition: "all 0.5s ease 0.4s",
-        textAlign: "center",
-      }}>
-        <div style={{
-          fontSize: 22, fontWeight: 800, letterSpacing: "6px",
-          color: BRAND.teal, textTransform: "uppercase",
-        }}>
-          EdgeFinder MLB
-        </div>
-        <div style={{
-          fontSize: 10, fontWeight: 500,
-          color: BRAND.muted, letterSpacing: "3px",
-          marginTop: 6, textTransform: "uppercase",
-        }}>
-          Sports Betting Analytics
-        </div>
-      </div>
-
-      <div style={{
-        marginTop: 32,
+        marginTop: 36,
         opacity: phase === "enter" ? 0 : 0.6,
-        transition: "opacity 0.4s ease 0.6s",
+        transition: "opacity 0.4s ease 0.5s",
       }}>
         <div style={{
-          width: 24, height: 24,
+          width: 22, height: 22,
           border: `2px solid ${BRAND.teal}30`,
           borderTopColor: BRAND.teal,
           borderRadius: "50%",

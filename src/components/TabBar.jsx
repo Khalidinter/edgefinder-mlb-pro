@@ -1,14 +1,14 @@
 // ═══════════════════════════════════════════════════
-// Tab bar — 5 tabs (Live / Trajectory / Performance / Validation / Resolved)
+// Tab bar — text-only tabs (no icons)
 // ═══════════════════════════════════════════════════
 import { C, BRAND } from '../utils/constants.js';
 
 export const TABS = [
-  { id: "live",        label: "Live Board",  icon: "🎯" },
-  { id: "trajectory",  label: "Trajectory",  icon: "📈" },
-  { id: "performance", label: "Performance", icon: "📊" },
-  { id: "validation",  label: "Validation",  icon: "✅" },
-  { id: "resolved",    label: "Resolved",    icon: "📜" },
+  { id: "live",        label: "Live Board"  },
+  { id: "trajectory",  label: "Trajectory"  },
+  { id: "performance", label: "Performance" },
+  { id: "validation",  label: "Validation"  },
+  { id: "resolved",    label: "Resolved"    },
 ];
 
 export default function TabBar({ active, onChange }) {
@@ -17,7 +17,7 @@ export default function TabBar({ active, onChange }) {
       display: "flex",
       borderBottom: `1px solid ${C.border}`,
       background: C.bg,
-      paddingLeft: 8, paddingRight: 8,
+      paddingLeft: 16, paddingRight: 16,
       overflowX: "auto",
     }}>
       {TABS.map(t => {
@@ -29,16 +29,16 @@ export default function TabBar({ active, onChange }) {
                     border: "none",
                     borderBottom: isActive ? `2px solid ${BRAND.teal}` : "2px solid transparent",
                     color: isActive ? C.text : C.muted,
-                    padding: "12px 18px",
-                    fontWeight: isActive ? 700 : 500,
+                    padding: "14px 20px",
+                    fontWeight: isActive ? 600 : 500,
                     fontSize: 14,
                     fontFamily: "inherit",
-                    transition: "all 0.15s",
+                    letterSpacing: "0.2px",
+                    transition: "color 0.15s, border-color 0.15s",
                     whiteSpace: "nowrap",
-                    display: "flex", alignItems: "center", gap: 6,
+                    cursor: "pointer",
                   }}>
-            <span style={{ fontSize: 14 }}>{t.icon}</span>
-            <span>{t.label}</span>
+            {t.label}
           </button>
         );
       })}

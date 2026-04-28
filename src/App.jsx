@@ -140,9 +140,9 @@ export default function App() {
 
       <footer style={{
         textAlign: "center", padding: "30px 16px", fontSize: 11, color: C.muted,
-        borderTop: `1px solid ${C.borderSoft}`, marginTop: 40,
+        borderTop: `1px solid ${C.borderSoft}`, marginTop: 40, letterSpacing: "1px",
       }}>
-        EdgeFinder MLB · CogniVault Labs · v0.1
+        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.1
       </footer>
     </div>
   );
