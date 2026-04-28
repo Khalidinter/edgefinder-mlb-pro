@@ -9,6 +9,7 @@ import TabBar from './components/TabBar.jsx';
 import SettingsDrawer from './components/SettingsDrawer.jsx';
 import LiveBoardTab from './components/tabs/LiveBoardTab.jsx';
 import TrajectoryTab from './components/tabs/TrajectoryTab.jsx';
+import PerformanceTab from './components/tabs/PerformanceTab.jsx';
 import Placeholder from './components/tabs/Placeholder.jsx';
 import { C, POLL, DEFAULT_WORKER_URL } from './utils/constants.js';
 import { usePolling } from './hooks/usePolling.js';
@@ -230,7 +231,12 @@ export default function App() {
             onConsumePreselect={() => setTrajectoryEdge(null)}
           />
         )}
-        {activeTab === "performance" && <Placeholder title="Performance"      milestone="Milestone 4" />}
+        {activeTab === "performance" && (
+          <PerformanceTab
+            edges={edgesData.edges}
+            edgesLoading={edgesData.loading}
+          />
+        )}
         {activeTab === "validation"  && <Placeholder title="Validation"       milestone="Milestone 5" />}
         {activeTab === "resolved"    && <Placeholder title="Resolved Bets"    milestone="Milestone 5" />}
       </main>
@@ -242,7 +248,7 @@ export default function App() {
         textAlign: "center", padding: "30px 16px", fontSize: 11, color: C.muted,
         borderTop: `1px solid ${C.borderSoft}`, marginTop: 40, letterSpacing: "1px",
       }}>
-        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.3
+        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.4
       </footer>
     </div>
   );
