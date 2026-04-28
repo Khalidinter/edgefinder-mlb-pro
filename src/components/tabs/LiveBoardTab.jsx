@@ -126,9 +126,12 @@ export default function LiveBoardTab({
           {selectedGame ? "Signals in this game" : "Live Signals"}
         </SectionHeading>
 
-        {edgesLoading && sortedSignals.length === 0 ? (
-          <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
+        {/* Loading takes priority: never show "No signals yet today" while
+            still fetching. Only declare empty after the fetch succeeded. */}
+        {(edgesLoading || !edges) && sortedSignals.length === 0 ? (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 60, gap: 12 }}>
             <Spinner size={28} />
+            <div style={{ color: C.muted, fontSize: 12 }}>Loading edges…</div>
           </div>
         ) : sortedSignals.length === 0 ? (
           <EmptyState

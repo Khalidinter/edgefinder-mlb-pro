@@ -31,11 +31,16 @@ const CHECK_DESCRIPTIONS = {
 };
 
 export default function ValidationTab({ validation, loading, onRefresh }) {
-  if (loading && !validation) {
-    return <div style={{ display: "flex", justifyContent: "center", padding: 60 }}><Spinner size={28} /></div>;
-  }
   if (!validation) {
-    return <EmptyState icon="◇" title="No validation data" subtitle="Worker hasn't run /validate yet." />;
+    // Loading or initial fetch — never declare "no validation data" until we
+    // actually got a response back. Worker auto-runs /validate after every
+    // resolve, so this only stays empty when the worker is brand-new.
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 80, gap: 14 }}>
+        <Spinner size={32} />
+        <div style={{ color: C.muted, fontSize: 13 }}>Loading validation checks…</div>
+      </div>
+    );
   }
 
   // Group checks by check type

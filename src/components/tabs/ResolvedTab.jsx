@@ -58,8 +58,13 @@ export default function ResolvedTab({ edges, edgesLoading, trackedBets }) {
   const filteredAgg  = useMemo(() => aggregate(filtered), [filtered]);
   const trackedAgg   = useMemo(() => aggregate(filtered.filter(e => trackedIds.has(e.id))), [filtered, trackedIds]);
 
-  if (edgesLoading && (!edges || edges.length === 0)) {
-    return <div style={{ display: "flex", justifyContent: "center", padding: 80 }}><Spinner size={32} /></div>;
+  if (edgesLoading || !edges) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 80, gap: 14 }}>
+        <Spinner size={32} />
+        <div style={{ color: C.muted, fontSize: 13 }}>Loading edges…</div>
+      </div>
+    );
   }
 
   if (resolved.length === 0) {

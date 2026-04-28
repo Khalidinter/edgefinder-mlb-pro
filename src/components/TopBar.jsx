@@ -42,13 +42,15 @@ function DatePill({ date }) {
 }
 
 export default function TopBar({ status, validation, onOpenSettings, onRefresh, lastFetch }) {
+  const isLoaded = !!status;                // status came back at least once
+  const valLoaded = !!validation;            // validation came back at least once
   const totals  = status?.totals || {};
   const today   = status?.today || {};
-  const profit  = totals.profit ?? 0;
-  const profitColor = profit >= 0 ? C.good : C.bad;
-  const valPass = validation?.pass !== false;
+  const profit  = totals.profit;             // can be undefined while loading
+  const profitColor = !isLoaded ? C.muted : profit >= 0 ? C.good : C.bad;
+  const valPass = valLoaded && validation.pass !== false;
 
-  // ISO date for the pill (matches Assists format: "2026-04-28")
+  // ISO date for the pill
   const todayISO = today.date || new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 
   return (
@@ -66,15 +68,29 @@ export default function TopBar({ status, validation, onOpenSettings, onRefresh, 
       </a>
 
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-        <Pill color={profitColor}>{fmtUnits(profit)} all-time</Pill>
-        <Pill color={today.edges ? BRAND.teal : C.muted} dim={!today.edges}>
-          {today.edges || 0} today
-        </Pill>
-        <Pill color={valPass ? C.good : C.bad}>
-          {valPass ? "Validation OK" : "Validation FAIL"}
-        </Pill>
-        {lastFetch && (
+        {isLoaded ? (
+          <Pill color={profitColor}>{fmtUnits(profit)} all-time</Pill>
+        ) : (
+          <Pill color={C.muted} dim>— all-time</Pill>
+        )}
+        {isLoaded ? (
+          <Pill color={today.edges ? BRAND.teal : C.muted} dim={!today.edges}>
+            {today.edges || 0} today
+          </Pill>
+        ) : (
+          <Pill color={C.muted} dim>— today</Pill>
+        )}
+        {valLoaded ? (
+          <Pill color={valPass ? C.good : C.bad}>
+            {valPass ? "Validation OK" : "Validation FAIL"}
+          </Pill>
+        ) : (
+          <Pill color={C.muted} dim>Validation …</Pill>
+        )}
+        {lastFetch ? (
           <Pill color={C.muted} dim>↻ {timeAgo(lastFetch)}</Pill>
+        ) : (
+          <Pill color={C.muted} dim>connecting…</Pill>
         )}
         <button onClick={onRefresh} title="Force refresh"
                 style={btnStyle}>↻</button>

@@ -68,15 +68,17 @@ export default function PerformanceTab({ edges, edgesLoading }) {
     return [...byDate].sort((a, b) => b.key.localeCompare(a.key));
   }, [byDate]);
 
-  if (edgesLoading && (!edges || edges.length === 0)) {
+  // Loading takes priority — only declare "no edges yet" after the fetch lands
+  if (edgesLoading || !edges) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", padding: 80 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 80, gap: 14 }}>
         <Spinner size={32} />
+        <div style={{ color: C.muted, fontSize: 13 }}>Loading edges…</div>
       </div>
     );
   }
 
-  if (!edges || edges.length === 0) {
+  if (edges.length === 0) {
     return (
       <EmptyState
         icon="◇"
