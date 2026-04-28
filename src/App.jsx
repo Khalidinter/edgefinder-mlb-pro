@@ -8,6 +8,7 @@ import TopBar from './components/TopBar.jsx';
 import TabBar from './components/TabBar.jsx';
 import SettingsDrawer from './components/SettingsDrawer.jsx';
 import LiveBoardTab from './components/tabs/LiveBoardTab.jsx';
+import TrajectoryTab from './components/tabs/TrajectoryTab.jsx';
 import Placeholder from './components/tabs/Placeholder.jsx';
 import { C, POLL, DEFAULT_WORKER_URL } from './utils/constants.js';
 import { usePolling } from './hooks/usePolling.js';
@@ -41,6 +42,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [authError, setAuthError] = useState("");
   const [todayDate, setTodayDate] = useState(() => todayET());
+  const [trajectoryEdge, setTrajectoryEdge] = useState(null); // edge handed to Trajectory tab
 
   // Persist
   useEffect(() => { LS.save("settings", settings); }, [settings]);
@@ -157,10 +159,10 @@ export default function App() {
     }
   }
 
-  // ── Trajectory handler (placeholder until M3) ──
+  // ── Trajectory handler ──
   function handleOpenTrajectory(edge) {
+    setTrajectoryEdge(edge);
     setActiveTab("trajectory");
-    // TODO M3: pre-select this edge in trajectory tab
   }
 
   // ── Splash + auth gate ──
@@ -218,7 +220,16 @@ export default function App() {
             todayDate={todayDate}
           />
         )}
-        {activeTab === "trajectory"  && <Placeholder title="Price Trajectory" milestone="Milestone 3" />}
+        {activeTab === "trajectory" && (
+          <TrajectoryTab
+            edges={edgesData.edges}
+            todayDate={todayDate}
+            workerUrl={settings.workerUrl}
+            token={settings.token}
+            preselectedEdge={trajectoryEdge}
+            onConsumePreselect={() => setTrajectoryEdge(null)}
+          />
+        )}
         {activeTab === "performance" && <Placeholder title="Performance"      milestone="Milestone 4" />}
         {activeTab === "validation"  && <Placeholder title="Validation"       milestone="Milestone 5" />}
         {activeTab === "resolved"    && <Placeholder title="Resolved Bets"    milestone="Milestone 5" />}
@@ -231,7 +242,7 @@ export default function App() {
         textAlign: "center", padding: "30px 16px", fontSize: 11, color: C.muted,
         borderTop: `1px solid ${C.borderSoft}`, marginTop: 40, letterSpacing: "1px",
       }}>
-        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.2
+        EDGEFINDER MLB · BY COGNIVAULTLABS · v0.3
       </footer>
     </div>
   );
