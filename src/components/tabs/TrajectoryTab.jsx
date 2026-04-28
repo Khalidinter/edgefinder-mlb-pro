@@ -10,7 +10,7 @@ import { fmtAmerican, fmtSignedPct } from '../../utils/format.js';
 import { fetchTrajectory } from '../../api/worker.js';
 
 export default function TrajectoryTab({
-  edges, todayDate,
+  edges, edgesLoading, todayDate,
   workerUrl, token,
   preselectedEdge, onConsumePreselect,
 }) {
@@ -96,7 +96,16 @@ export default function TrajectoryTab({
     return () => clearInterval(id);
   }, [selected, loadTraj]);
 
+  // Distinguish initial load (parent still fetching /export) from genuine empty
   if (props.length === 0) {
+    if (edgesLoading || !edges || edges.length === 0) {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 80, gap: 12 }}>
+          <Spinner size={28} />
+          <div style={{ color: C.muted, fontSize: 12 }}>Loading today's slate…</div>
+        </div>
+      );
+    }
     return (
       <EmptyState
         icon="◇"
@@ -120,13 +129,37 @@ export default function TrajectoryTab({
             borderRadius: 10, padding: 14, paddingBottom: 8,
             minHeight: 360,
           }}>
-            {loading && !traj ? (
-              <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
+            {/* Loading takes priority over error: while loading,
+                hide any prior error so we don't flash "Failed to fetch"
+                during a transient retry. */}
+            {loading ? (
+              <div style={{
+                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                padding: 60, gap: 12,
+              }}>
                 <Spinner size={28} />
+                <div style={{ color: C.muted, fontSize: 12 }}>Loading trajectory…</div>
               </div>
             ) : error ? (
-              <div style={{ color: C.bad, fontSize: 13, padding: 16 }}>
-                Error: {error.message}
+              <div style={{
+                padding: 24, textAlign: "center",
+                color: C.muted, fontSize: 13,
+              }}>
+                <div style={{ fontSize: 28, color: C.dim, marginBottom: 10 }}>⚠</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 6 }}>
+                  Couldn't load trajectory
+                </div>
+                <div style={{ marginBottom: 14, fontSize: 12 }}>
+                  {error.message === "Failed to fetch"
+                    ? "Network blip or worker cold-start. Tap retry."
+                    : error.message}
+                </div>
+                <button onClick={loadTraj} style={{
+                  padding: "6px 14px", fontSize: 12, fontWeight: 600,
+                  background: "transparent", border: `1px solid ${C.border}`,
+                  color: C.text, borderRadius: 6,
+                  cursor: "pointer", fontFamily: "inherit",
+                }}>Retry</button>
               </div>
             ) : !traj?.observations || traj.observations.length === 0 ? (
               <EmptyState

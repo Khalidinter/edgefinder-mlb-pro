@@ -7,9 +7,37 @@ function authHeaders(token) {
   return { "Authorization": `Bearer ${token}`, "Accept": "application/json" };
 }
 
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+// Retry transient failures (network errors, 5xx, 502/503/504).
+// Don't retry 401 (auth) or 4xx (client error).
+async function fetchWithRetry(url, init, { retries = 2, baseDelay = 400 } = {}) {
+  let lastErr;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, init);
+      // 5xx → retry; 4xx → don't retry, surface the error
+      if (res.status >= 500 && res.status < 600 && attempt < retries) {
+        await sleep(baseDelay * Math.pow(2, attempt));
+        continue;
+      }
+      return res;
+    } catch (e) {
+      // Network error / "Failed to fetch" / DNS / timeout
+      lastErr = e;
+      if (attempt < retries) {
+        await sleep(baseDelay * Math.pow(2, attempt));
+        continue;
+      }
+      throw lastErr;
+    }
+  }
+  throw lastErr;
+}
+
 async function getJSON(workerUrl, token, path) {
   const url = workerUrl.replace(/\/$/, "") + path;
-  const res = await fetch(url, { headers: authHeaders(token) });
+  const res = await fetchWithRetry(url, { headers: authHeaders(token) });
   if (res.status === 401) throw new Error("UNAUTHORIZED");
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
   const ct = res.headers.get("content-type") || "";
@@ -19,7 +47,7 @@ async function getJSON(workerUrl, token, path) {
 
 async function postJSON(workerUrl, token, path, body) {
   const url = workerUrl.replace(/\/$/, "") + path;
-  const res = await fetch(url, {
+  const res = await fetchWithRetry(url, {
     method: "POST",
     headers: { ...authHeaders(token), "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -31,7 +59,7 @@ async function postJSON(workerUrl, token, path, body) {
 
 async function deleteReq(workerUrl, token, path) {
   const url = workerUrl.replace(/\/$/, "") + path;
-  const res = await fetch(url, { method: "DELETE", headers: authHeaders(token) });
+  const res = await fetchWithRetry(url, { method: "DELETE", headers: authHeaders(token) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
